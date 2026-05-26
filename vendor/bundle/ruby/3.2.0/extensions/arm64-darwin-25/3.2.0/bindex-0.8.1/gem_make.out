@@ -1,0 +1,31 @@
+current directory: /Users/vignesh.murugesan/prompt-validator-project/vendor/bundle/ruby/3.2.0/gems/bindex-0.8.1/ext/skiptrace
+/Users/vignesh.murugesan/.rbenv/versions/3.2.2/bin/ruby extconf.rb
+creating Makefile
+
+current directory: /Users/vignesh.murugesan/prompt-validator-project/vendor/bundle/ruby/3.2.0/gems/bindex-0.8.1/ext/skiptrace
+make DESTDIR\= sitearchdir\=./.gem.20260527-41679-p4tnwi sitelibdir\=./.gem.20260527-41679-p4tnwi clean
+
+current directory: /Users/vignesh.murugesan/prompt-validator-project/vendor/bundle/ruby/3.2.0/gems/bindex-0.8.1/ext/skiptrace
+make DESTDIR\= sitearchdir\=./.gem.20260527-41679-p4tnwi sitelibdir\=./.gem.20260527-41679-p4tnwi
+compiling cruby.c
+In file included from cruby.c:1:
+In file included from /Users/vignesh.murugesan/.rbenv/versions/3.2.2/include/ruby-3.2.0/ruby.h:38:
+In file included from /Users/vignesh.murugesan/.rbenv/versions/3.2.2/include/ruby-3.2.0/ruby/ruby.h:28:
+In file included from /Users/vignesh.murugesan/.rbenv/versions/3.2.2/include/ruby-3.2.0/ruby/internal/arithmetic.h:24:
+In file included from /Users/vignesh.murugesan/.rbenv/versions/3.2.2/include/ruby-3.2.0/ruby/internal/arithmetic/char.h:29:
+/Users/vignesh.murugesan/.rbenv/versions/3.2.2/include/ruby-3.2.0/ruby/internal/core/rstring.h:465:24: warning: default initialization of an object of type 'struct RString' with const member leaves the object uninitialized [-Wdefault-const-init-field-unsafe]
+  465 |         struct RString retval;
+      |                        ^
+/Users/vignesh.murugesan/.rbenv/versions/3.2.2/include/ruby-3.2.0/ruby/internal/core/rbasic.h:88:17: note: member 'klass' declared 'const' here
+   88 |     const VALUE klass;
+      |                 ^
+1 warning generated.
+linking shared-object skiptrace/internal/cruby.bundle
+ld: warning: ignoring duplicate libraries: '-lruby.3.2'
+
+current directory: /Users/vignesh.murugesan/prompt-validator-project/vendor/bundle/ruby/3.2.0/gems/bindex-0.8.1/ext/skiptrace
+make DESTDIR\= sitearchdir\=./.gem.20260527-41679-p4tnwi sitelibdir\=./.gem.20260527-41679-p4tnwi install
+/usr/bin/install -c -m 0755 cruby.bundle ./.gem.20260527-41679-p4tnwi/skiptrace/internal
+
+current directory: /Users/vignesh.murugesan/prompt-validator-project/vendor/bundle/ruby/3.2.0/gems/bindex-0.8.1/ext/skiptrace
+make DESTDIR\= sitearchdir\=./.gem.20260527-41679-p4tnwi sitelibdir\=./.gem.20260527-41679-p4tnwi clean

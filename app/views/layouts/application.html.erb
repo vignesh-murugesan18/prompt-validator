@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "AI Prompt Coach" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
+    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%# Includes Tailwind's generated stylesheet plus app-level CSS %>
+    <%= stylesheet_link_tag "tailwind", "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="min-h-screen bg-[#fbfbf8] text-slate-950 antialiased">
+    <div class="min-h-screen bg-[linear-gradient(rgba(37,99,235,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(37,99,235,0.045)_1px,transparent_1px)] bg-[size:32px_32px]">
+      <header class="border-b border-slate-200/70 bg-white/85 backdrop-blur">
+        <nav class="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
+          <%= link_to root_path, class: "flex items-center gap-3" do %>
+            <span class="grid size-8 place-items-center rounded-full bg-amber-100 text-sm font-black text-amber-700 ring-1 ring-amber-200">R</span>
+            <span class="font-mono text-sm font-semibold text-slate-900">Vignesh's Prompt Coach</span>
+          <% end %>
+
+          <div class="flex items-center gap-3">
+            <button type="button" class="relative rounded-full p-2 text-slate-700 transition hover:bg-slate-100" aria-label="Notifications">
+              <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M15 17H9m9-6a6 6 0 0 0-12 0c0 3-1 5-2 6h16c-1-1-2-3-2-6Z" />
+                <path d="M10 21h4" />
+              </svg>
+              <span class="absolute right-1.5 top-1.5 size-2 rounded-full bg-blue-500 ring-2 ring-white"></span>
+            </button>
+            <%= link_to content_for(:nav_cta).presence || "Go Pro", "#", class: "rounded-md bg-blue-600 px-5 py-2 font-mono text-xs font-bold text-white shadow-sm shadow-blue-200 transition hover:bg-blue-700" %>
+          </div>
+        </nav>
+      </header>
+
+      <%= yield %>
+    </div>
+  </body>
+</html>

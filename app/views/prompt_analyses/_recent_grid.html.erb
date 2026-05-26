@@ -1,0 +1,33 @@
+<% if analyses.any? %>
+  <div class="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+    <table class="w-full text-left">
+      <thead class="border-b border-slate-200 bg-white">
+        <tr>
+          <th class="px-4 py-3 font-mono text-xs font-bold text-slate-700">Prompt</th>
+          <th class="w-24 px-4 py-3 text-right font-mono text-xs font-bold text-slate-700">Score</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100">
+        <% analyses.each do |analysis| %>
+          <tr class="transition hover:bg-blue-50/50">
+            <td class="px-4 py-3">
+              <%= link_to prompt_analysis_path(analysis), class: "grid gap-1 sm:grid-cols-[72px_1fr] sm:items-center" do %>
+                <span class="font-mono text-xs text-slate-400"><%= time_ago_in_words(analysis.created_at) %> ago</span>
+                <span class="line-clamp-1 font-mono text-sm text-slate-800"><%= analysis.prompt_preview(180) %></span>
+              <% end %>
+            </td>
+            <td class="px-4 py-3 text-right">
+              <%= link_to prompt_analysis_path(analysis), class: "inline-flex rounded px-2 py-1 font-mono text-xs font-bold #{score_badge_class(analysis.score)}" do %>
+                <%= number_with_precision(analysis.score, precision: 1) %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <p class="rounded-lg border border-dashed border-slate-300 bg-white p-6 text-center text-sm text-slate-500">
+    Shared prompt analyses will appear here after the first completed run.
+  </p>
+<% end %>

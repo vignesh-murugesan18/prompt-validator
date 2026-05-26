@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+
+begin
+  exec "foreman", "start", "-f", "Procfile.dev", *ARGV
+rescue Errno::ENOENT
+  warn "Install foreman with `gem install foreman` to run Rails and Tailwind together."
+  exec "./bin/rails", "server", *ARGV
+end

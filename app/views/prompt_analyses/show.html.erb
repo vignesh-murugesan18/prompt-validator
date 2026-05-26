@@ -1,0 +1,15 @@
+<% content_for :title, "Prompt Analysis" %>
+<% content_for :nav_cta, "Go Pro" %>
+
+<main class="px-4 py-12 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-5xl">
+    <section
+      data-controller="analysis-poll"
+      data-analysis-poll-url-value="<%= result_prompt_analysis_path(@prompt_analysis) %>"
+      data-analysis-poll-interval-value="2500">
+      <div data-analysis-poll-target="result" data-status="<%= @prompt_analysis.status %>">
+        <%= render "prompt_analyses/result", prompt_analysis: @prompt_analysis %>
+      </div>
+    </section>
+  </div>
+</main>
