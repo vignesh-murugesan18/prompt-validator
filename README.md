@@ -31,9 +31,11 @@ If `GROQ_API_KEY` is missing or Groq rate limits are exceeded, the app falls bac
 
 ## Local Setup
 
+Copy `.env.example` to `.env` and set `DATABASE_URL` (Neon pooled URL), `GROQ_API_KEY`, and any optional AI keys. Development uses the same `DATABASE_URL` as production.
+
 ```sh
 bundle install
-bin/rails db:create db:migrate db:seed
+bin/rails db:prepare db:seed
 bin/dev
 ```
 
