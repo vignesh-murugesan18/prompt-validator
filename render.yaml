@@ -16,7 +16,7 @@ services:
       - key: SOLID_QUEUE_IN_PUMA
         value: "true"
       - key: APP_HOST
-        value: prompt-validator-project.onrender.com
+        value: prompt-validator.onrender.com
       - key: SECRET_KEY_BASE
         generateValue: true
       - key: DATABASE_URL
