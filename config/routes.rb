@@ -3,7 +3,14 @@ Rails.application.routes.draw do
 
   resources :prompt_analyses, only: %i[create show] do
     get :result, on: :member
+    resource :prompt_rewrite, only: %i[create show]
   end
+
+  resources :prompt_templates, only: %i[index show]
+
+  resources :prompt_experiments, only: %i[new create show]
+
+  resource :dashboard, only: %i[show], controller: "dashboards"
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

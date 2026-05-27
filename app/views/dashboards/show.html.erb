@@ -1,0 +1,63 @@
+<% content_for :title, "Your Dashboard" %>
+<% content_for :nav_cta, "New prompt" %>
+
+<main class="px-4 py-10 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-5xl">
+    <header class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <h1 class="font-mono text-2xl font-black tracking-[-0.05em] text-slate-950">Principles Dashboard</h1>
+        <p class="mt-2 text-sm text-slate-600">Personalized coaching based on your recent prompts (stored anonymously in this browser).</p>
+      </div>
+      <%= link_to "Back to editor", root_path, class: "w-fit rounded-md border border-slate-200 bg-white px-4 py-2 font-mono text-xs font-bold text-slate-700 transition hover:bg-slate-50" %>
+    </header>
+
+    <% if @dashboard.analysis_count.zero? %>
+      <div class="mt-8 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+        <p class="font-mono text-sm font-bold text-slate-900">No completed analyses yet.</p>
+        <p class="mt-2 text-sm text-slate-600">Analyze a prompt first, then come back to see your strongest and weakest principles.</p>
+        <div class="mt-4">
+          <%= link_to "Browse templates", prompt_templates_path, class: "rounded-md bg-blue-600 px-4 py-2 font-mono text-xs font-bold text-white shadow-sm shadow-blue-200 transition hover:bg-blue-700" %>
+        </div>
+      </div>
+    <% else %>
+      <section class="mt-8 grid gap-4 md:grid-cols-3">
+        <div class="rounded-lg border border-slate-200 bg-white p-5 shadow-sm md:col-span-1">
+          <p class="font-mono text-xs font-bold uppercase tracking-[0.25em] text-slate-500">Overall average</p>
+          <p class="mt-3 font-mono text-4xl font-black text-slate-950"><%= @dashboard.overall_average %><span class="text-base font-bold text-slate-500">/10</span></p>
+          <p class="mt-2 text-sm text-slate-600"><%= @dashboard.analysis_count %> prompts analyzed</p>
+        </div>
+
+        <div class="rounded-lg border border-slate-200 bg-white p-5 shadow-sm md:col-span-2">
+          <p class="font-mono text-xs font-bold uppercase tracking-[0.25em] text-slate-500">Top coaching opportunities</p>
+          <div class="mt-4 grid gap-3 md:grid-cols-3">
+            <% @dashboard.weakest_principles.each do |row| %>
+              <div class="rounded-lg border border-rose-200 bg-rose-50 p-4">
+                <p class="text-sm font-semibold text-slate-950"><%= row[:name] %></p>
+                <p class="mt-2 font-mono text-2xl font-black text-rose-700"><%= row[:average] %></p>
+                <p class="mt-1 text-xs text-slate-600"><%= row[:samples] %> samples</p>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </section>
+
+      <section class="mt-8 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+        <div class="border-b border-slate-200 bg-slate-50 px-5 py-4">
+          <h2 class="font-mono text-sm font-bold text-slate-900">Principle averages</h2>
+        </div>
+        <div class="divide-y divide-slate-100">
+          <% @dashboard.principles.each do |row| %>
+            <div class="flex items-center justify-between gap-4 px-5 py-3">
+              <p class="text-sm font-semibold text-slate-950"><%= row[:name] %></p>
+              <div class="flex items-center gap-3">
+                <span class="<%= score_badge_class(row[:average]) %> rounded-md px-2.5 py-1 font-mono text-xs font-black"><%= row[:average] %></span>
+                <span class="font-mono text-xs text-slate-400"><%= row[:samples] %></span>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </section>
+    <% end %>
+  </div>
+</main>
+

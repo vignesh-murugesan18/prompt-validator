@@ -27,3 +27,77 @@ examples.each_with_index do |attributes, index|
     example.save!
   end
 end
+
+templates = [
+  {
+    title: "Rails bug investigation (with reproduction)",
+    slug: "rails-bug-investigation",
+    category: "Debugging",
+    description: "A structured prompt that forces reproduction steps, logs, and a safe fix plan before code changes.",
+    web_search_default: false,
+    ai_model: "llama-3.3-70b-versatile",
+    prompt_text: <<~TEXT
+      You are a senior Rails engineer. Before suggesting fixes, ask clarifying questions if anything is missing.
+
+      Step 1: Restate the bug in one sentence and list 3 hypotheses.
+      Step 2: Propose the smallest reproducible test or console reproduction steps.
+      Step 3: Identify the most likely root cause in the existing code (name files/functions to inspect).
+      Step 4: Provide a safe fix with rollback plan, and a test plan (unit + request/system as appropriate).
+
+      Context:
+      - Rails version:
+      - Error message / stack trace:
+      - What changed recently:
+      - Expected vs actual behavior:
+      - Relevant code paths (files/classes):
+    TEXT
+  },
+  {
+    title: "Feature build spec (scoped MVP)",
+    slug: "feature-build-mvp-spec",
+    category: "Productivity",
+    description: "Turns a vague feature request into a clear, testable MVP with edge cases and error handling.",
+    web_search_default: true,
+    ai_model: "llama-3.1-8b-instant",
+    prompt_text: <<~TEXT
+      Act as a senior SaaS product engineer. If any requirement is unclear, ask questions before proposing an implementation.
+
+      Goal: <one sentence>
+      Users: <who uses it>
+      Constraints: <tech constraints, latency, cost, security>
+
+      Step 1: Write an MVP spec with acceptance criteria and non-goals.
+      Step 2: List edge cases and error states (new users + existing users).
+      Step 3: Propose a data model and API/UI flow.
+      Step 4: Provide an incremental implementation plan (small PR-sized steps).
+      Step 5: Provide a test plan.
+    TEXT
+  },
+  {
+    title: "Refactor plan (safe and incremental)",
+    slug: "safe-refactor-plan",
+    category: "Engineering",
+    description: "A refactor prompt that prioritizes safety, observability, and incremental rollout.",
+    web_search_default: false,
+    ai_model: "llama-3.1-8b-instant",
+    prompt_text: <<~TEXT
+      You are a principal engineer. Before writing code, propose 2-3 refactor approaches with trade-offs.
+      Prioritize safety and incremental rollout.
+
+      Step 1: Identify the current pain (performance, readability, coupling, bugs).
+      Step 2: Suggest a target design and incremental steps.
+      Step 3: Include error handling and rollback strategy.
+      Step 4: Provide a test plan and success metrics.
+
+      Existing code (key files/snippets):
+      - <paste here>
+    TEXT
+  }
+]
+
+templates.each do |attributes|
+  PromptTemplate.find_or_initialize_by(slug: attributes[:slug]).tap do |template|
+    template.assign_attributes(attributes.merge(public: true))
+    template.save!
+  end
+end

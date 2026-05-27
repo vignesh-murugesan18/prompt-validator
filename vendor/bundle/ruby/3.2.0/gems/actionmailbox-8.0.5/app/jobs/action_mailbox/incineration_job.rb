@@ -15,7 +15,7 @@ module ActionMailbox
     discard_on ActiveRecord::RecordNotFound
 
     def self.schedule(inbound_email)
-      set(wait: ActionMailbox.incinerate_after).perform_later(inbound_email)
+      set(wait: ActionMailbox.incinerate_after).perform_now(inbound_email)
     end
 
     def perform(inbound_email)

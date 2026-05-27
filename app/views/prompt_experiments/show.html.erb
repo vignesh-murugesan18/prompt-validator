@@ -1,0 +1,55 @@
+<% content_for :title, "Experiment" %>
+<% content_for :nav_cta, "New experiment" %>
+
+<main class="px-4 py-10 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-5xl">
+    <header class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+      <div>
+        <p class="font-mono text-xs font-bold uppercase tracking-[0.25em] text-slate-500">A/B Prompt Lab</p>
+        <h1 class="mt-2 font-mono text-2xl font-black tracking-[-0.05em] text-slate-950">
+          <%= @prompt_experiment.title.presence || "Experiment ##{@prompt_experiment.id}" %>
+        </h1>
+        <% if @prompt_experiment.goal.present? %>
+          <p class="mt-2 text-sm text-slate-600"><%= @prompt_experiment.goal %></p>
+        <% end %>
+        <p class="mt-2 font-mono text-xs text-slate-400">
+          <%= @prompt_experiment.ai_model %><%= @prompt_experiment.web_search? ? " · web search" : "" %> · <%= @prompt_experiment.status %>
+        </p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2">
+        <%= link_to "New experiment", new_prompt_experiment_path, class: "rounded-md bg-blue-600 px-4 py-2 font-mono text-xs font-bold text-white shadow-sm shadow-blue-200 transition hover:bg-blue-700" %>
+        <%= link_to "Back to editor", root_path, class: "rounded-md border border-slate-200 bg-white px-4 py-2 font-mono text-xs font-bold text-slate-700 transition hover:bg-slate-50" %>
+      </div>
+    </header>
+
+    <% if @prompt_analyses.empty? %>
+      <div class="mt-8 rounded-lg border border-slate-200 bg-white p-6 text-slate-700 shadow-sm">
+        <p class="font-mono text-sm font-bold text-slate-900">No variants were created.</p>
+        <p class="mt-2 text-sm text-slate-600">Create a new experiment and add at least one prompt variant.</p>
+      </div>
+    <% else %>
+      <section class="mt-8 grid gap-6">
+        <% @prompt_analyses.each_with_index do |analysis, index| %>
+          <div class="rounded-lg border border-slate-200 bg-white shadow-sm">
+            <div class="flex items-center justify-between border-b border-slate-200 bg-slate-50 px-4 py-3">
+              <p class="font-mono text-xs font-bold uppercase tracking-[0.25em] text-slate-600">Variant <%= index + 1 %></p>
+              <%= link_to "Open", prompt_analysis_path(analysis), class: "rounded-md border border-slate-200 bg-white px-3 py-1.5 font-mono text-[11px] font-bold text-slate-700 transition hover:bg-slate-50" %>
+            </div>
+            <div class="p-4">
+              <section
+                data-controller="analysis-poll"
+                data-analysis-poll-url-value="<%= result_prompt_analysis_path(analysis) %>"
+                data-analysis-poll-interval-value="2500">
+                <div data-analysis-poll-target="result" data-status="<%= analysis.status %>">
+                  <%= render "prompt_analyses/result", prompt_analysis: analysis %>
+                </div>
+              </section>
+            </div>
+          </div>
+        <% end %>
+      </section>
+    <% end %>
+  </div>
+</main>
+

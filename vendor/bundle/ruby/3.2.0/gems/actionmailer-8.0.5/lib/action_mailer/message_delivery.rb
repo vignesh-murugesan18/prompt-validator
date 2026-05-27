@@ -148,7 +148,7 @@ module ActionMailer
             "#deliver_later, 2. only touch the message *within your mailer " \
             "method*, or 3. use a custom Active Job instead of #deliver_later."
         else
-          @mailer_class.delivery_job.set(options).perform_later(
+          @mailer_class.delivery_job.set(options).perform_now(
             @mailer_class.name, @action.to_s, delivery_method.to_s, args: @args)
         end
       end

@@ -4,9 +4,10 @@ class PromptAnalysesController < ApplicationController
   def create
     @prompt_analysis = PromptAnalysis.new(prompt_analysis_params)
     @prompt_analysis.status = "queued"
+    @prompt_analysis.visitor_token = current_visitor_token
 
     if @prompt_analysis.save
-      AnalyzePromptJob.perform_later(@prompt_analysis)
+      AnalyzePromptJob.perform_now(@prompt_analysis)
       redirect_to @prompt_analysis
     else
       load_home_collections

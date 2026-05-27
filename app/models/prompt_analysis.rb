@@ -2,6 +2,9 @@ class PromptAnalysis < ApplicationRecord
   STATUSES = %w[queued processing completed failed].freeze
   MIN_PROMPT_LENGTH = 40
 
+  belongs_to :prompt_experiment, optional: true
+  has_many :prompt_rewrites, dependent: :destroy
+
   validates :prompt_text, presence: true, length: { minimum: MIN_PROMPT_LENGTH, maximum: 20_000 }
   validates :status, inclusion: { in: STATUSES }
   validates :ai_model, presence: true
