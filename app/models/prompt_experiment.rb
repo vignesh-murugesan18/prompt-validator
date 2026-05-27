@@ -1,6 +1,7 @@
 class PromptExperiment < ApplicationRecord
   STATUSES = %w[queued processing completed failed].freeze
 
+  belongs_to :prompt_session, optional: true
   has_many :prompt_analyses, dependent: :nullify
 
   validates :status, inclusion: { in: STATUSES }

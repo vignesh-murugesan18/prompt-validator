@@ -1,0 +1,10 @@
+<h1 style="font-size: 20px; margin: 0 0 8px;">Your prompt analysis is ready</h1>
+<p class="muted">Score: <strong><%= @prompt_analysis.score %>/10</strong></p>
+
+<div class="card">
+  <p style="margin: 0;"><%= @prompt_analysis.summary %></p>
+</div>
+
+<p style="margin-top: 24px;">
+  <%= link_to "View full results", prompt_analysis_url(@prompt_analysis) %>
+</p>

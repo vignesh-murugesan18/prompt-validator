@@ -9,6 +9,7 @@ class HomeController < ApplicationController
       prompt_text: @prompt_template&.prompt_text
     )
     @examples = ExamplePrompt.limit(6)
+    @your_recent_analyses = current_prompt_session.prompt_analyses.recent_first.limit(8)
     @recent_analyses = PromptAnalysis.shared_completed.recent_first.limit(10)
     @prompts_tested_count = PromptAnalysis.shared_completed.count
     @top_analyses = PromptAnalysis.shared_completed.within_last_day.top_scored.limit(6)

@@ -35,14 +35,14 @@
           <div class="flex items-center gap-3">
             <%= link_to "Templates", prompt_templates_path, class: "hidden rounded-md border border-slate-200 bg-white px-4 py-2 font-mono text-xs font-bold text-slate-700 transition hover:bg-slate-50 sm:inline-flex" %>
             <%= link_to "A/B Lab", new_prompt_experiment_path, class: "hidden rounded-md border border-slate-200 bg-white px-4 py-2 font-mono text-xs font-bold text-slate-700 transition hover:bg-slate-50 sm:inline-flex" %>
+            <%= link_to "My work", prompt_sessions_path, class: "hidden rounded-md border border-slate-200 bg-white px-4 py-2 font-mono text-xs font-bold text-slate-700 transition hover:bg-slate-50 sm:inline-flex" %>
             <%= link_to "Dashboard", dashboard_path, class: "hidden rounded-md border border-slate-200 bg-white px-4 py-2 font-mono text-xs font-bold text-slate-700 transition hover:bg-slate-50 sm:inline-flex" %>
-            <button type="button" class="relative rounded-full p-2 text-slate-700 transition hover:bg-slate-100" aria-label="Notifications">
+            <%= link_to edit_notification_preference_path, class: "relative rounded-full p-2 text-slate-700 transition hover:bg-slate-100", aria: { label: "Notification settings" } do %>
               <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M15 17H9m9-6a6 6 0 0 0-12 0c0 3-1 5-2 6h16c-1-1-2-3-2-6Z" />
                 <path d="M10 21h4" />
               </svg>
-              <span class="absolute right-1.5 top-1.5 size-2 rounded-full bg-blue-500 ring-2 ring-white"></span>
-            </button>
+            <% end %>
             <%= link_to content_for(:nav_cta).presence || "Go Pro", "#", class: "rounded-md bg-blue-600 px-5 py-2 font-mono text-xs font-bold text-white shadow-sm shadow-blue-200 transition hover:bg-blue-700" %>
           </div>
         </nav>

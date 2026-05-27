@@ -1,0 +1,33 @@
+<h1 style="font-size: 20px; margin: 0 0 8px;"><%= @digest.period_label %> digest</h1>
+<p class="muted">Your prompt coaching summary from AI Prompt Coach.</p>
+
+<div class="card">
+  <p style="margin: 0;"><strong><%= @digest.analysis_count %></strong> prompts analyzed</p>
+  <p style="margin: 8px 0 0; font-size: 28px; font-weight: 800;"><%= @digest.overall_average %>/10</p>
+  <% if @digest.score_change.present? %>
+    <p class="muted" style="margin: 4px 0 0;">
+      <%= @digest.score_change >= 0 ? "↑" : "↓" %> <%= @digest.score_change.abs %> vs previous period
+    </p>
+  <% end %>
+</div>
+
+<% if @digest.weakest_principles.any? %>
+  <div class="card">
+    <p style="margin: 0 0 8px; font-weight: 600;">Focus areas</p>
+    <ul style="margin: 0; padding-left: 20px;">
+      <% @digest.weakest_principles.each do |row| %>
+        <li><%= row[:name] %> · <%= row[:average] %>/10</li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<p style="margin-top: 24px;">
+  <%= link_to "Open your dashboard", dashboard_url %>
+  ·
+  <%= link_to "Analyze another prompt", root_url %>
+</p>
+
+<p class="muted" style="margin-top: 24px;">
+  Update notification settings anytime from the app header.
+</p>

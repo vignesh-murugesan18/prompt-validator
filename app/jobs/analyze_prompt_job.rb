@@ -20,5 +20,8 @@ class AnalyzePromptJob < ApplicationJob
       suggestions: result.fetch(:suggestions),
       analysis: result.fetch(:analysis)
     )
+
+    prompt_analysis.prompt_session&.touch_last_activity!
+    NotifyAnalysisCompleteJob.perform_later(prompt_analysis)
   end
 end

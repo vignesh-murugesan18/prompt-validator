@@ -5,13 +5,16 @@ class PromptExperimentsController < ApplicationController
     @prompt_experiment = PromptExperiment.new(
       ai_model: Ai::PromptAnalyzer.default_model,
       web_search: false,
-      status: "queued"
+      status: "queued",
+      prompt_session: current_prompt_session
     )
     @variants = Array(params[:variants]).presence || ["", ""]
   end
 
   def create
-    @prompt_experiment = PromptExperiment.new(prompt_experiment_params.merge(status: "queued"))
+    @prompt_experiment = PromptExperiment.new(
+      prompt_experiment_params.merge(status: "queued", prompt_session: current_prompt_session)
+    )
     variant_texts = variant_params
 
     if variant_texts.empty?
@@ -26,6 +29,8 @@ class PromptExperimentsController < ApplicationController
       analyses = variant_texts.first(VARIANT_LIMIT).map do |text|
         PromptAnalysis.create!(
           prompt_experiment: @prompt_experiment,
+          prompt_session: current_prompt_session,
+          visitor_token: current_visitor_token,
           prompt_text: text,
           ai_model: @prompt_experiment.ai_model,
           web_search: @prompt_experiment.web_search,
@@ -65,4 +70,3 @@ class PromptExperimentsController < ApplicationController
       .reject(&:blank?)
   end
 end
-

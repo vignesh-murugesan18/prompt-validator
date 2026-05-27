@@ -3,6 +3,7 @@ class PromptAnalysis < ApplicationRecord
   MIN_PROMPT_LENGTH = 40
 
   belongs_to :prompt_experiment, optional: true
+  belongs_to :prompt_session, optional: true
   has_many :prompt_rewrites, dependent: :destroy
 
   validates :prompt_text, presence: true, length: { minimum: MIN_PROMPT_LENGTH, maximum: 20_000 }
@@ -11,6 +12,7 @@ class PromptAnalysis < ApplicationRecord
   validates :score, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 10 }, allow_nil: true
 
   scope :shared_completed, -> { where(shared: true, status: "completed").where.not(score: nil) }
+  scope :for_session, ->(session) { where(prompt_session: session) }
   scope :recent_first, -> { order(created_at: :desc) }
   scope :within_last_day, -> { where(created_at: 24.hours.ago..) }
   scope :top_scored, -> { order(score: :desc, created_at: :desc) }

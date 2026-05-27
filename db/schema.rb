@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_27_020100) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_27_120002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -22,6 +22,19 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_27_020100) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["position"], name: "index_example_prompts_on_position"
+  end
+
+  create_table "notification_preferences", force: :cascade do |t|
+    t.bigint "prompt_session_id", null: false
+    t.string "email"
+    t.string "digest_frequency", default: "none", null: false
+    t.boolean "notify_on_complete", default: false, null: false
+    t.string "slack_webhook_url"
+    t.datetime "last_digest_sent_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["digest_frequency"], name: "index_notification_preferences_on_digest_frequency"
+    t.index ["prompt_session_id"], name: "index_notification_preferences_on_prompt_session_id", unique: true
   end
 
   create_table "prompt_analyses", force: :cascade do |t|
@@ -39,9 +52,71 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_27_020100) do
     t.text "error_message"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "prompt_experiment_id"
+    t.string "visitor_token"
+    t.bigint "prompt_session_id"
+    t.index ["prompt_experiment_id"], name: "index_prompt_analyses_on_prompt_experiment_id"
+    t.index ["prompt_session_id"], name: "index_prompt_analyses_on_prompt_session_id"
     t.index ["shared", "status", "created_at"], name: "index_prompt_analyses_on_shared_and_status_and_created_at"
     t.index ["shared", "status", "score"], name: "index_prompt_analyses_on_shared_and_status_and_score"
     t.index ["status"], name: "index_prompt_analyses_on_status"
+    t.index ["visitor_token"], name: "index_prompt_analyses_on_visitor_token"
+  end
+
+  create_table "prompt_experiments", force: :cascade do |t|
+    t.string "title"
+    t.text "goal"
+    t.string "ai_model", default: "llama-3.1-8b-instant", null: false
+    t.boolean "web_search", default: false, null: false
+    t.string "status", default: "queued", null: false
+    t.text "error_message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "prompt_session_id"
+    t.index ["created_at"], name: "index_prompt_experiments_on_created_at"
+    t.index ["prompt_session_id"], name: "index_prompt_experiments_on_prompt_session_id"
+    t.index ["status"], name: "index_prompt_experiments_on_status"
+  end
+
+  create_table "prompt_rewrites", force: :cascade do |t|
+    t.bigint "prompt_analysis_id", null: false
+    t.string "status", default: "queued", null: false
+    t.text "error_message"
+    t.string "strategy", default: "default", null: false
+    t.jsonb "rewrites", default: [], null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["prompt_analysis_id", "strategy"], name: "index_prompt_rewrites_on_prompt_analysis_id_and_strategy", unique: true
+    t.index ["prompt_analysis_id"], name: "index_prompt_rewrites_on_prompt_analysis_id"
+    t.index ["status"], name: "index_prompt_rewrites_on_status"
+  end
+
+  create_table "prompt_sessions", force: :cascade do |t|
+    t.string "visitor_token", null: false
+    t.string "email"
+    t.string "title"
+    t.datetime "last_activity_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_prompt_sessions_on_email"
+    t.index ["last_activity_at"], name: "index_prompt_sessions_on_last_activity_at"
+    t.index ["visitor_token"], name: "index_prompt_sessions_on_visitor_token", unique: true
+  end
+
+  create_table "prompt_templates", force: :cascade do |t|
+    t.string "title", null: false
+    t.string "slug", null: false
+    t.string "category", null: false
+    t.text "description"
+    t.text "prompt_text", null: false
+    t.string "ai_model"
+    t.boolean "web_search_default", default: false, null: false
+    t.boolean "public", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category"], name: "index_prompt_templates_on_category"
+    t.index ["public"], name: "index_prompt_templates_on_public"
+    t.index ["slug"], name: "index_prompt_templates_on_slug", unique: true
   end
 
   create_table "solid_cable_messages", force: :cascade do |t|
@@ -138,10 +213,21 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_27_020100) do
     t.index ["task_key", "run_at"], name: "index_solid_queue_recurring_executions_on_task_key_and_run_at", unique: true
   end
 
-# Could not dump table "solid_queue_recurring_tasks" because of following ActiveRecord::ConnectionFailed
-#   PQconsumeInput() could not receive data from server: Operation timed out
-SSL SYSCALL error: Operation timed out
-
+  create_table "solid_queue_recurring_tasks", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "schedule", null: false
+    t.string "command", limit: 2048
+    t.string "class_name"
+    t.text "arguments"
+    t.string "queue_name"
+    t.integer "priority", default: 0
+    t.boolean "static", default: true, null: false
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["key"], name: "index_solid_queue_recurring_tasks_on_key", unique: true
+    t.index ["static"], name: "index_solid_queue_recurring_tasks_on_static"
+  end
 
   create_table "solid_queue_scheduled_executions", force: :cascade do |t|
     t.bigint "job_id", null: false
@@ -164,14 +250,14 @@ SSL SYSCALL error: Operation timed out
     t.index ["key"], name: "index_solid_queue_semaphores_on_key", unique: true
   end
 
+  add_foreign_key "notification_preferences", "prompt_sessions"
+  add_foreign_key "prompt_analyses", "prompt_experiments"
+  add_foreign_key "prompt_analyses", "prompt_sessions"
+  add_foreign_key "prompt_experiments", "prompt_sessions"
+  add_foreign_key "prompt_rewrites", "prompt_analyses"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_failed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
-  add_foreign_key "solid_queue_ready_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
-  add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
-  add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
-end
-_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_ready_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade

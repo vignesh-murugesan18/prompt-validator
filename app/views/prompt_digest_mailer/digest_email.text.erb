@@ -1,0 +1,17 @@
+<%= @digest.period_label %> digest — AI Prompt Coach
+
+Prompts analyzed: <%= @digest.analysis_count %>
+Average score: <%= @digest.overall_average %>/10
+<% if @digest.score_change.present? %>
+Change vs previous period: <%= @digest.score_change >= 0 ? "+" : "" %><%= @digest.score_change %>
+<% end %>
+
+<% if @digest.weakest_principles.any? %>
+Focus areas:
+<% @digest.weakest_principles.each do |row| %>
+- <%= row[:name] %> · <%= row[:average] %>/10
+<% end %>
+<% end %>
+
+Dashboard: <%= dashboard_url %>
+Editor: <%= root_url %>

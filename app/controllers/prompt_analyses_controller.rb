@@ -5,6 +5,7 @@ class PromptAnalysesController < ApplicationController
     @prompt_analysis = PromptAnalysis.new(prompt_analysis_params)
     @prompt_analysis.status = "queued"
     @prompt_analysis.visitor_token = current_visitor_token
+    @prompt_analysis.prompt_session = current_prompt_session
 
     if @prompt_analysis.save
       AnalyzePromptJob.perform_now(@prompt_analysis)
@@ -38,6 +39,7 @@ class PromptAnalysesController < ApplicationController
 
   def load_home_collections
     @examples = ExamplePrompt.limit(6)
+    @your_recent_analyses = current_prompt_session.prompt_analyses.recent_first.limit(8)
     @recent_analyses = PromptAnalysis.shared_completed.recent_first.limit(10)
     @top_analyses = PromptAnalysis.shared_completed.within_last_day.top_scored.limit(6)
     @worst_analyses = PromptAnalysis.shared_completed.within_last_day.lowest_scored.limit(6)

@@ -1,0 +1,53 @@
+<% content_for :title, "My Work" %>
+<% content_for :nav_cta, "New prompt" %>
+
+<main class="px-4 py-10 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-5xl">
+    <header class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <h1 class="font-mono text-2xl font-black tracking-[-0.05em] text-slate-950">My Work</h1>
+        <p class="mt-2 text-sm text-slate-600">Your prompts, experiments, and rewrites in this browser session.</p>
+        <% if @session.email.present? %>
+          <p class="mt-1 font-mono text-xs text-slate-500">Linked email: <%= @session.email %></p>
+        <% end %>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <%= link_to "New prompt", root_path, class: "rounded-md bg-blue-600 px-4 py-2 font-mono text-xs font-bold text-white shadow-sm shadow-blue-200 transition hover:bg-blue-700" %>
+        <%= link_to "Notifications", edit_notification_preference_path, class: "rounded-md border border-slate-200 bg-white px-4 py-2 font-mono text-xs font-bold text-slate-700 transition hover:bg-slate-50" %>
+      </div>
+    </header>
+
+    <section class="mt-10">
+      <h2 class="font-mono text-sm font-black uppercase tracking-[0.25em] text-slate-500">Recent analyses</h2>
+      <div class="mt-4">
+        <%= render "prompt_analyses/recent_grid", analyses: @analyses.select(&:completed?) %>
+        <% if @analyses.none? %>
+          <p class="mt-4 text-sm text-slate-600">No analyses yet. <%= link_to "Analyze your first prompt", root_path, class: "font-semibold text-blue-700 hover:text-blue-800" %>.</p>
+        <% end %>
+      </div>
+    </section>
+
+    <% if @experiments.any? %>
+      <section class="mt-12">
+        <h2 class="font-mono text-sm font-black uppercase tracking-[0.25em] text-slate-500">A/B experiments</h2>
+        <div class="mt-4 grid gap-3">
+          <% @experiments.each do |experiment| %>
+            <%= link_to prompt_experiment_path(experiment), class: "flex items-center justify-between rounded-lg border border-slate-200 bg-white px-4 py-3 shadow-sm transition hover:border-blue-200 hover:shadow-md" do %>
+              <span>
+                <span class="font-mono text-sm font-bold text-slate-900"><%= experiment.title.presence || "Experiment ##{experiment.id}" %></span>
+                <span class="mt-1 block font-mono text-xs text-slate-400"><%= experiment.status %> · <%= time_ago_in_words(experiment.created_at) %> ago</span>
+              </span>
+              <span class="font-mono text-xs font-bold text-blue-600">Open →</span>
+            <% end %>
+          <% end %>
+        </div>
+      </section>
+    <% end %>
+
+    <p class="mt-10 rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+      <strong class="text-slate-800">Cross-device sync:</strong> add your email in
+      <%= link_to "notification settings", edit_notification_preference_path, class: "font-semibold text-blue-700" %>
+      to merge future sessions on other devices when you sign in with the same email.
+    </p>
+  </div>
+</main>
