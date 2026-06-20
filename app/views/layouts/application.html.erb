@@ -18,32 +18,57 @@
 
     <%# Includes Tailwind's generated stylesheet plus app-level CSS %>
     <%= stylesheet_link_tag "tailwind", "application", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
   <body class="min-h-screen bg-[#fbfbf8] text-slate-950 antialiased">
     <div class="min-h-screen bg-[linear-gradient(rgba(37,99,235,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(37,99,235,0.045)_1px,transparent_1px)] bg-[size:32px_32px]">
       <header class="border-b border-slate-200/70 bg-white/85 backdrop-blur">
-        <nav class="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <nav class="mx-auto flex h-14 items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center gap-3">
           <%= link_to root_path, class: "flex items-center gap-3" do %>
             <span class="size-4 shrink-0 rounded-full ring-1 ring-amber-200">
               <%= image_tag "profile.png", alt: "Profile", class: "object-cover" %>
             </span>
             <span class="font-mono text-sm font-semibold text-slate-900">Vignesh's Prompt Coach</span>
           <% end %>
+        </div>
 
           <div class="flex items-center gap-3">
             <%= link_to "Templates", prompt_templates_path, class: "hidden rounded-md border border-slate-200 bg-white px-4 py-2 font-mono text-xs font-bold text-slate-700 transition hover:bg-slate-50 sm:inline-flex" %>
             <%= link_to "A/B Lab", new_prompt_experiment_path, class: "hidden rounded-md border border-slate-200 bg-white px-4 py-2 font-mono text-xs font-bold text-slate-700 transition hover:bg-slate-50 sm:inline-flex" %>
             <%= link_to "My work", prompt_sessions_path, class: "hidden rounded-md border border-slate-200 bg-white px-4 py-2 font-mono text-xs font-bold text-slate-700 transition hover:bg-slate-50 sm:inline-flex" %>
             <%= link_to "Dashboard", dashboard_path, class: "hidden rounded-md border border-slate-200 bg-white px-4 py-2 font-mono text-xs font-bold text-slate-700 transition hover:bg-slate-50 sm:inline-flex" %>
+            <%
+=begin%>
+ <%= link_to "Workspaces", workspaces_path, class: "hidden rounded-md border border-slate-200 bg-white px-4 py-2 font-mono text-xs font-bold text-slate-700 transition hover:bg-slate-50 sm:inline-flex" %> 
+<%
+=end%>
             <%= link_to edit_notification_preference_path, class: "relative rounded-full p-2 text-slate-700 transition hover:bg-slate-100", aria: { label: "Notification settings" } do %>
               <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M15 17H9m9-6a6 6 0 0 0-12 0c0 3-1 5-2 6h16c-1-1-2-3-2-6Z" />
                 <path d="M10 21h4" />
               </svg>
             <% end %>
-            <%= link_to content_for(:nav_cta).presence || "Go Pro", "#", class: "rounded-md bg-blue-600 px-5 py-2 font-mono text-xs font-bold text-white shadow-sm shadow-blue-200 transition hover:bg-blue-700" %>
+            <% if current_user %>
+              <span class="hidden font-mono text-[11px] text-slate-500 sm:inline"><%= current_user.email %></span>
+              <%= button_to "Sign out", account_session_path, method: :delete, class: "hidden rounded-md border border-slate-200 bg-white px-3 py-2 font-mono text-[11px] font-bold text-slate-700 transition hover:bg-slate-50 sm:inline-flex" %>
+            <% else %>
+              <%
+=begin%>
+ <%= form_with url: magic_links_path, method: :post, class: "hidden items-center gap-2 sm:flex" do |f| %>
+                <%= f.email_field :email, placeholder: "email for sign-in", class: "w-44 rounded-md border border-slate-200 px-2 py-1.5 text-xs" %>
+                <%= f.submit "Send link", class: "rounded-md border border-slate-200 bg-white px-3 py-2 font-mono text-[11px] font-bold text-slate-700 transition hover:bg-slate-50" %>
+              <% end %> 
+<%
+=end%>
+            <% end %>
+            <%
+=begin%>
+ <%= link_to content_for(:nav_cta).presence || "Go Pro", "#", class: "rounded-md bg-blue-600 px-5 py-2 font-mono text-xs font-bold text-white shadow-sm shadow-blue-200 transition hover:bg-blue-700" %> 
+<%
+=end%>
           </div>
         </nav>
       </header>
@@ -52,4 +77,5 @@
     </div>
   </body>
 </html>
+
 
