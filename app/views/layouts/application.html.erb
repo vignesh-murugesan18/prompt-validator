@@ -51,24 +51,6 @@
                 <path d="M10 21h4" />
               </svg>
             <% end %>
-            <% if current_user %>
-              <span class="hidden font-mono text-[11px] text-slate-500 sm:inline"><%= current_user.email %></span>
-              <%= button_to "Sign out", account_session_path, method: :delete, class: "hidden rounded-md border border-slate-200 bg-white px-3 py-2 font-mono text-[11px] font-bold text-slate-700 transition hover:bg-slate-50 sm:inline-flex" %>
-            <% else %>
-              <%
-=begin%>
- <%= form_with url: magic_links_path, method: :post, class: "hidden items-center gap-2 sm:flex" do |f| %>
-                <%= f.email_field :email, placeholder: "email for sign-in", class: "w-44 rounded-md border border-slate-200 px-2 py-1.5 text-xs" %>
-                <%= f.submit "Send link", class: "rounded-md border border-slate-200 bg-white px-3 py-2 font-mono text-[11px] font-bold text-slate-700 transition hover:bg-slate-50" %>
-              <% end %> 
-<%
-=end%>
-            <% end %>
-            <%
-=begin%>
- <%= link_to content_for(:nav_cta).presence || "Go Pro", "#", class: "rounded-md bg-blue-600 px-5 py-2 font-mono text-xs font-bold text-white shadow-sm shadow-blue-200 transition hover:bg-blue-700" %> 
-<%
-=end%>
           </div>
         </nav>
       </header>
